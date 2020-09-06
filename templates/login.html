@@ -22,6 +22,11 @@
       {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
       {% endif %}
+
+      <! -- Messages -->
+      {% for message in get_flashed_messages() %}
+        {{ messge }}
+      {% endfor %}
     </div>
   </body>
 </html>
