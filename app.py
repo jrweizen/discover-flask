@@ -1,11 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request
-
+from flask import Flask, render_template, redirect, url_for, request, session
 
 app = Flask(__name__)
 
+app.secret_key = "my precious"
+
 @app.route('/')
 def home():
-    return "Test for Echo!"
+    return "Index page - Test for Echo!"
 
 @app.route('/welcome')
 def welcome():
@@ -19,8 +20,14 @@ def login():
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
             error = 'Invalid Credentials. Please try again.'
         else:
+            session['logged_in'] = True
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('welcome'))
 
 if __name__ == '__main__':
     app.run(debug=True)
