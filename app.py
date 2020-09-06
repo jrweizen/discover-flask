@@ -6,8 +6,20 @@ app = Flask(__name__)
 
 app.secret_key = "my precious"
 
+# login required decorator
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('You need to login first.')
+            return redirect(url_for('login'))
+    return wrap
+
 # Use decorators to link the function to a url
 @app.route('/')
+@login_required
 def home():
     # return "Index page - Test for Echo!"
     return render_template('index.html')
@@ -30,6 +42,7 @@ def login():
     return render_template('login.html', error=error)
 
 @app.route('/logout')
+@login_required
 def logout():
     session.pop('logged_in', None)
     flash('You were just logged out!')
