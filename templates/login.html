@@ -1,12 +1,6 @@
-<html>
-  <head>
-    <title>Flask Intro - login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
+{% extends "base.html" %}
+{% block content %}
 
-  <body>
-    <div class="container">
       <h1>Please login</h1>
       <br>
       <!-- form -->
@@ -18,16 +12,4 @@
         <input class="btn btn-default" type="submit" value="Login">
       </form>
 
-      <! -- Error login message -->
-      {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
-      {% endif %}
-
-      <! -- Messages -->
-      {% for message in get_flashed_messages() %}
-        {{ messge }}
-      {% endfor %}
-    </div>
-  </body>
-</html>
-
+{% endblock %}
