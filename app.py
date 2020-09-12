@@ -2,7 +2,7 @@
 from functools import wraps
 
 from flask import Flask, render_template, redirect, \
-    url_for, request, session, flash, g
+    url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 # create the application object
@@ -10,12 +10,16 @@ app = Flask(__name__)
 
 # config
 app.secret_key = 'my precious'
-app.database = 'sample.db'
-# app.db = 'sample.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+
+# app.database = 'sample.db'
+# app.db = 'sample.db'
 
 # Create sqlalchemy object
 db = SQLAlchemy(app)
+
+# Import the models after db
+from models import *
 
 
 # login required decorator
@@ -34,11 +38,15 @@ def login_required(f):
 @app.route('/')
 @login_required
 def home():
-    # return "Hello, World!"  # return a string
-    g.db = connect_db()
-    cur = g.db.execute('select * from posts')
-    posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
-    g.db.close()
+    # return "Hello, World!"  # return a string in SQLite
+
+    # g.db = connect_db()
+    # cur = g.db.execute('select * from posts')
+    # posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
+    # g.db.close()
+
+    # SQLAlchemy Style
+    posts = db.session.query(BlogPost).all
     return render_template('index.html', posts=posts)  # render a template
 
 
@@ -73,6 +81,5 @@ def logout():
 # def connect_db():
 #     return sqlite3.connect(app.database)
 
-# start the server with the 'run()' method
 if __name__ == '__main__':
     app.run(debug=True)
